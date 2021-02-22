@@ -4,7 +4,7 @@ from flask_pymongo import PyMongo
 
 app = Flask(__name__)
 
-client = pymongo.MongoClient("mongodb://admin:AAGzez02811@10.100.2.126:11154")
+client = pymongo.MongoClient("mongodb://admin:AAGzez02811@10.100.2.126:27017")
 #client = pymongo.MongoClient("mongodb://admin:AAGzez02811@node9149-advweb-11.app.ruk-com.cloud:11154")
 
 db = client["MMORPG"]
