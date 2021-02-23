@@ -20,23 +20,20 @@ def index():
 @app.route("/Character", methods=['GET'])
 def get_allcharacter():
     char = db.Character
+    weapon = db.Weapon
     output = []
+    output2 = []
     for x in char.find():
-        output.append({'name' : x['name'],'level' : x['level'],
+        output.append("Character : ",{'name' : x['name'],'level' : x['level'],
                         'class' : x['class'],
                         'guild' : x['guild'],
                         'server' : x['server']})
-    return jsonify(output)
 
-########## GET ALL #################
-@app.route("/Weapon", methods=['GET'])
-def get_allweapon():
-    weapon = db.Weapon
-    output = []
-    for x in weapon.find():
-        output.append({'weapon_name' : x['weapon_name'],'weapon_type' : x['weapon_type'],
-                        'weapon_amount' : x['weapon_amount']})
-    return jsonify(output)
+    
+    for y in weapon.find():
+        output2.append("Weapon : ",{'weapon_name' : y['weapon_name'],'weapon_type' : y['weapon_type'],
+                        'weapon_amount' : y['weapon_amount']})
+    return jsonify(output,output2)
 
 ############## GET ONE ############################
 @app.route("/Character/<name>", methods=['GET'])
