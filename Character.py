@@ -61,7 +61,7 @@ def get_inventory():
 ############## JOIN name,nameweapon ###############
 
 @app.route("/InventoryChar", methods=['GET'])
-def get_inventoryjoin(name):
+def get_inventoryjoin():
     char = db.Character
     #weapon = db.Weapon
     output = char.aggregate([
