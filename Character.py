@@ -76,7 +76,7 @@ def get_inventoryjoin():
         },
         {'$unwind':'$Weapon'},
         {
-            '$project': {'_id':1,
+            '$project': {'name':1,
                         'weapon_name':'$Weapon.weapon_name'}
         },
     ])
