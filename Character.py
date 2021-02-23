@@ -1,11 +1,12 @@
 import pymongo
+from bson import json_util
 from flask import Flask,jsonify,render_template,request
 from flask_pymongo import PyMongo
 
 app = Flask(__name__)
 
-client = pymongo.MongoClient("mongodb://admin:AAGzez02811@10.100.2.126:27017")
-#client = pymongo.MongoClient("mongodb://admin:AAGzez02811@node9149-advweb-11.app.ruk-com.cloud:11154")
+#client = pymongo.MongoClient("mongodb://admin:AAGzez02811@10.100.2.126:27017")
+client = pymongo.MongoClient("mongodb://admin:AAGzez02811@node9149-advweb-11.app.ruk-com.cloud:11154")
 
 db = client["MMORPG"]
 
@@ -22,18 +23,65 @@ def get_allcharacter():
     char = db.Character
     weapon = db.Weapon
     output = []
-    output2 = []
+    output.append("Character : ")
     for x in char.find():
-        output.append({'name' : x['name'],'level' : x['level'],
+        output.append({'_id' : x['_id'],'name' : x['name'],
+                        'level' : x['level'],
                         'class' : x['class'],
                         'guild' : x['guild'],
                         'server' : x['server']})
 
     output.append("Weapon : ")
     for y in weapon.find():
-        output.append({'weapon_name' : y['weapon_name'],'weapon_type' : y['weapon_type'],
+        output.append({'char_id' : y['char_id'],'weapon_name' : y['weapon_name'],
+                        'weapon_type' : y['weapon_type'],
                         'weapon_amount' : y['weapon_amount']})
     return jsonify(output)
+
+############## JOIN COLLECTION ###############
+
+@app.route("/Inventory", methods=['GET'])
+def get_inventory():
+    char = db.Character
+    #weapon = db.Weapon
+    output = char.aggregate([
+        {
+            '$lookup':
+                {
+                    'from': "Weapon",
+                    'localField': '_id',
+                    'foreignField': 'char_id',
+                    'as': "Weapon"
+                }
+        }
+    ])
+    
+    return json_util.dumps(output)
+
+############## JOIN name,nameweapon ###############
+
+@app.route("/Inventory/<name>", methods=['GET'])
+def get_inventoryjoin(name):
+    char = db.Character
+    #weapon = db.Weapon
+    output = char.aggregate([
+        {
+            '$lookup':
+                {
+                    'from': "Weapon",
+                    'localField': '_id',
+                    'foreignField': 'char_id',
+                    'as': "Weapon"
+                }
+        },
+        {'$unwind':'$Weapon'},
+        {
+            '$project': {'_id':1,
+                        'weapon_name':'$Weapon.weapon_name'}
+        },
+    ])
+    
+    return json_util.dumps(output)
 
 ############## GET ONE ############################
 @app.route("/Character/<name>", methods=['GET'])
@@ -115,4 +163,4 @@ def delete_character(name):
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0',port = 80)
+    app.run(host='0.0.0.0',port = 5000)
