@@ -28,6 +28,16 @@ def get_allcharacter():
                         'server' : x['server']})
     return jsonify(output)
 
+########## GET ALL #################
+@app.route("/Weapon", methods=['GET'])
+def get_allweapon():
+    weapon = db.Weapon
+    output = []
+    for x in weapon.find():
+        output.append({'weapon_name' : x['weapon_name'],'weapon_type' : x['weapon_type'],
+                        'weapon_amount' : x['weapon_amount']})
+    return jsonify(output)
+
 ############## GET ONE ############################
 @app.route("/Character/<name>", methods=['GET'])
 def get_onecharacter(name):
