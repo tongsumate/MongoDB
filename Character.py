@@ -24,16 +24,16 @@ def get_allcharacter():
     output = []
     output2 = []
     for x in char.find():
-        output.append("Character : " + {'name' : x['name'],'level' : x['level'],
+        output.append({'name' : x['name'],'level' : x['level'],
                         'class' : x['class'],
                         'guild' : x['guild'],
                         'server' : x['server']})
 
     
     for y in weapon.find():
-        output.append("Weapon : " + {'weapon_name' : y['weapon_name'],'weapon_type' : y['weapon_type'],
+        output.append({'weapon_name' : y['weapon_name'],'weapon_type' : y['weapon_type'],
                         'weapon_amount' : y['weapon_amount']})
-    return jsonify(output)
+    return jsonify(output,output2)
 
 ############## GET ONE ############################
 @app.route("/Character/<name>", methods=['GET'])
